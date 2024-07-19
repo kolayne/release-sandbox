@@ -25,3 +25,6 @@ jobs:
           body_path: ${{ github.workspace }}/this-changelog.md
           files: |
             ./a
+    
+    permissions:
+      contents: write
