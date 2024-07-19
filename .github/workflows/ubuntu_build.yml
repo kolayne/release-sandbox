@@ -1,0 +1,27 @@
+name: Build on ubuntu and maybe release
+
+on:
+  push:
+  pull_request:
+  
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare release notes
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          # Assert that the changelog begins with this release
+          head -1 CHANGELOG.md | grep -E "^# ${{ github.ref_name }}$" > this-changelog.md
+          # Extract the part of changelog for this release (until next first-level heading)
+          tail -n +1 CHANGELOG.md | sed '/^# /q' | tail -n-1 >> this-changelog.md
+      - name: Release new version
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: ${{ github.workspace }}/this-changelog.md
+          files: |
+            ./a
