@@ -17,7 +17,7 @@ jobs:
           # Assert that the changelog begins with this release
           head -1 CHANGELOG.md | grep -E "^# ${{ github.ref_name }}$" > this-changelog.md
           # Extract the part of changelog for this release (until next first-level heading)
-          tail -n +1 CHANGELOG.md | sed '/^# /q' | tail -n-1 >> this-changelog.md
+          tail -n +2 CHANGELOG.md | sed '/^# /q' | head -n-1 >> this-changelog.md
       - name: Release new version
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
